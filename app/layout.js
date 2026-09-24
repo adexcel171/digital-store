@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "./providers";
@@ -17,7 +18,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen flex-col font-sans">
         <Providers>
-          <Navbar />
+          <Suspense
+            fallback={<div className="h-16 border-b border-slate-200/70 bg-white" />}
+          >
+            <Navbar />
+          </Suspense>
           <main className="flex-1">{children}</main>
           <Footer />
         </Providers>

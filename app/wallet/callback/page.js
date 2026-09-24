@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FiCheckCircle, FiXCircle, FiLoader } from "react-icons/fi";
 import { formatCurrency } from "@/lib/format";
 
-export default function WalletCallbackPage() {
+function WalletCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { status: sessionStatus, update } = useSession();
@@ -113,5 +113,13 @@ export default function WalletCallbackPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function WalletCallbackPage() {
+  return (
+    <Suspense fallback={null}>
+      <WalletCallbackContent />
+    </Suspense>
   );
 }
