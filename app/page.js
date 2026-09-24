@@ -2,9 +2,70 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import ShopSection from "@/components/ShopSection";
-import { FiZap, FiShield, FiDownload, FiStar } from "react-icons/fi";
+import Link from "next/link";
+import {
+  FiZap,
+  FiShield,
+  FiHeadphones,
+  FiUserPlus,
+  FiCreditCard,
+  FiShoppingBag,
+  FiPackage,
+  FiGift,
+  FiLock,
+  FiChevronDown,
+} from "react-icons/fi";
 
 export const dynamic = "force-dynamic";
+
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Express Marketplace";
+const SUPPORT_EMAIL = "support@expresslogs.org";
+
+// Put your hero photo at: public/hero-bg.jpg
+const HERO_IMAGE = "/hero-bg.jpg";
+
+const STATS = [
+  { num: "2K+", label: "Available account resources" },
+  { num: "Fast", label: "Order processing" },
+  { num: "24/7", label: "Customer support" },
+];
+
+const STEPS = [
+  { icon: FiUserPlus, title: "1. Sign Up", text: "Create your account and open your buyer dashboard." },
+  { icon: FiCreditCard, title: "2. Add Funds", text: "Fund your wallet with one of the available payment options." },
+  { icon: FiShoppingBag, title: "3. Pick Accounts", text: "Browse ready-made accounts, pages, and premium logins." },
+  { icon: FiPackage, title: "4. Track Delivery", text: "Follow your order status and contact support when needed." },
+];
+
+const FEATURES = [
+  { icon: FiGift, title: "Free to use", text: "Create an account for free and explore available marketplace categories." },
+  { icon: FiCreditCard, title: "Simple payments", text: "Add funds and keep your order history organized in one buyer dashboard." },
+  { icon: FiLock, title: "Secure ordering", text: "Order accounts and premium logins through a structured panel experience." },
+  { icon: FiHeadphones, title: "Support when needed", text: "Get help from support whenever you need assistance with an order." },
+];
+
+// Add real customer stories here, e.g. { name: "Ada O.", text: "..." }
+// The section only shows cards when this list has entries.
+const STORIES = [];
+
+const FAQS = [
+  {
+    q: "Why do people use Express Marketplace?",
+    a: "Buyers use it as one organized place to browse social media accounts, pages, premium account logins and other account resources, with clear ordering, order tracking and support.",
+  },
+  {
+    q: "What accounts do you sell here?",
+    a: "We sell social media accounts and pages, logins of premium accounts of all sorts, and other account resources. Browse the products section above to see what is currently available.",
+  },
+  {
+    q: "How do I place an order?",
+    a: "Create a free account, fund your wallet, pick the account resource you need and pay from your wallet. You can then follow the order status from your dashboard.",
+  },
+  {
+    q: "Can I contact support?",
+    a: `Yes. Our support team is available 24/7. Reach us at ${SUPPORT_EMAIL} whenever you need help with an order.`,
+  },
+];
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -13,8 +74,10 @@ async function getProducts({ search, category }) {
 
   const filter = { isActive: true };
   if (search) {
-    // Case-insensitive "contains" match on the product name
-    filter.name = { $regex: escapeRegex(search), $options: "i" };
+    // Case-insensitive "contains" match. The admin form saves `title`,
+    // so search both `title` and `name` to be safe.
+    const rx = { $regex: escapeRegex(search), $options: "i" };
+    filter.$or = [{ title: rx }, { name: rx }];
   }
   if (category && category !== "all") {
     filter.category = category;
@@ -40,50 +103,52 @@ export default async function HomePage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-[#0a0a0a] text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,#2563eb18,transparent)]" />
+        {/* Background image + dark overlay so text stays readable */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/90" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,#2563eb30,transparent)]" />
 
-        <div className="relative mx-auto max-w-4xl px-6 py-20 text-center">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-slate-400">
+        <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-28">
+          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-medium text-slate-200 backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-            Instant digital delivery
+            Fast order processing
           </span>
 
           <h1 className="mx-auto max-w-2xl text-4xl font-bold leading-[1.15] tracking-tight text-white sm:text-5xl">
-            The smartest way to buy digital products
+            {APP_NAME}
           </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-slate-400">
-            Fund your wallet once. Buy ebooks, courses, software keys, and
-            templates in one click — no card required at checkout.
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300">
+            We sell various types of accounts on our panel such as social media
+            accounts and pages, logins of premium accounts of all sorts and more.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/register"
+              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+            >
+              Create free account
+            </Link>
             <a
               href="#products"
-              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+              className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-slate-100 backdrop-blur transition hover:border-white/40 hover:text-white"
             >
               Browse products
             </a>
-            <a
-              href="#how-it-works"
-              className="rounded-xl border border-white/10 px-6 py-3 text-sm font-medium text-slate-300 transition hover:border-white/20 hover:text-white"
-            >
-              How it works
-            </a>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-10 border-t border-white/5 pt-10">
-            {[
-              { num: "4,200+", label: "Products" },
-              { num: "18k", label: "Happy buyers" },
-              { num: "Instant", label: "Delivery" },
-            ].map(({ num, label }) => (
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-10 border-t border-white/10 pt-10">
+            {STATS.map(({ num, label }) => (
               <div key={label} className="text-center">
                 <p className="text-2xl font-bold text-white">{num}</p>
-                <p className="mt-1 text-xs text-slate-500">{label}</p>
+                <p className="mt-1 text-xs text-slate-400">{label}</p>
               </div>
             ))}
           </div>
@@ -92,18 +157,15 @@ export default async function HomePage({ searchParams }) {
 
       {/* ── Trust strip ── */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-8 px-6 py-4 text-xs font-medium text-gray-400">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-8 px-6 py-4 text-xs font-medium text-gray-500">
           <span className="flex items-center gap-1.5">
-            <FiShield className="text-blue-500" size={14} /> Secure wallet payments
+            <FiShield className="text-blue-500" size={14} /> Secure wallet ordering
           </span>
           <span className="flex items-center gap-1.5">
-            <FiDownload className="text-blue-500" size={14} /> Instant access after purchase
+            <FiZap className="text-blue-500" size={14} /> Fast order processing
           </span>
           <span className="flex items-center gap-1.5">
-            <FiZap className="text-blue-500" size={14} /> No card needed at checkout
-          </span>
-          <span className="flex items-center gap-1.5">
-            <FiStar className="text-blue-500" size={14} /> Verified creators
+            <FiHeadphones className="text-blue-500" size={14} /> 24/7 customer support
           </span>
         </div>
       </div>
@@ -111,6 +173,125 @@ export default async function HomePage({ searchParams }) {
       {/* ── Products (client component handles filter + search) ── */}
       <ShopSection products={products} categories={categories} />
 
+      {/* ── Why choose us ── */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
+            Why choose {APP_NAME}?
+          </h2>
+          <p className="mt-3 text-gray-500">
+            A simple, secure panel for account buyers who need organized access,
+            clear delivery, and dependable support.
+          </p>
+          <p className="mt-6 text-sm leading-relaxed text-gray-500">
+            {APP_NAME} gives buyers one easy place to browse social media
+            accounts, pages, premium account logins, and other digital account
+            resources with clear ordering and support.
+          </p>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section id="how-it-works" className="scroll-mt-20 py-16">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">Where to begin?</h2>
+            <p className="mt-3 text-gray-500">
+              Start with a free account, fund your wallet, and choose the account
+              resource you need.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map(({ icon: Icon, title, text }) => (
+              <div key={title} className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Icon size={20} />
+                </span>
+                <h3 className="mt-4 font-bold text-gray-900">{title}</h3>
+                <p className="mt-1.5 text-sm text-gray-500">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Built for account buyers ── */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-5xl px-6">
+          <h2 className="text-center text-2xl font-extrabold text-gray-900 sm:text-3xl">
+            Built for account buyers
+          </h2>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            {FEATURES.map(({ icon: Icon, title, text }) => (
+              <div key={title} className="flex gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-6">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">
+                  <Icon size={20} />
+                </span>
+                <div>
+                  <h3 className="font-bold text-gray-900">{title}</h3>
+                  <p className="mt-1 text-sm text-gray-500">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Success stories ── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">Success stories</h2>
+          <p className="mt-3 text-gray-500">
+            See how buyers use {APP_NAME} to source account resources faster.
+          </p>
+
+          {STORIES.length > 0 && (
+            <div className="mt-10 grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+              {STORIES.map((s) => (
+                <figure key={s.name} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                  <blockquote className="text-sm leading-relaxed text-gray-600">{s.text}</blockquote>
+                  <figcaption className="mt-4 text-sm font-semibold text-gray-900">{s.name}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
+              Popular questions about {APP_NAME}
+            </h2>
+            <p className="mt-3 text-gray-500">
+              We picked some common questions and answered them below.
+            </p>
+          </div>
+
+          <div className="mt-10 space-y-3">
+            {FAQS.map((f) => (
+              <details key={f.q} className="group rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <FiChevronDown className="shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-gray-500">{f.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-sm text-gray-500">
+            Need help? Contact{" "}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-blue-600 hover:underline">
+              {SUPPORT_EMAIL}
+            </a>
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
