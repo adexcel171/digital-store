@@ -38,13 +38,13 @@ export default function ProductCard({ product }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-sm"
     >
       {/* thumbnail */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-50 p-3">
         {image ? (
           <Image
             src={image}
             alt={title}
             fill
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className="object-contain p-2 transition duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-3xl text-gray-300">
@@ -81,7 +81,7 @@ export default function ProductCard({ product }) {
         )}
 
         {/* price + CTA */}
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex flex-col gap-2">
           <div className="flex items-baseline gap-1.5">
             {originalPrice && (
               <span className="text-[11px] text-gray-400 line-through">
@@ -96,7 +96,7 @@ export default function ProductCard({ product }) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex items-center gap-1 rounded-lg bg-gray-900 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-blue-600"
+            className="flex w-full items-center justify-center gap-1 rounded-lg bg-gray-900 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-blue-600"
           >
             <FiShoppingCart size={12} /> Add to cart
           </button>
