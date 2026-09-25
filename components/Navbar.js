@@ -11,7 +11,7 @@ import {
   FiX,
   FiCreditCard,
   FiLogOut,
-  FiGrid,
+
   FiSearch,
   FiPackage,
   FiChevronDown,
@@ -21,7 +21,7 @@ import { useCart } from "@/context/CartContext";
 import { formatCurrency } from "@/lib/format";
 
 const LINKS = [
-  { href: "/", label: "Shop" },
+  { href: "/", label: "Marketplace" },
   { href: "/dashboard", label: "My Orders" },
   { href: "/wallet", label: "Wallet" },
 ];
@@ -166,11 +166,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 text-lg font-extrabold text-ink-900"
+          className="flex shrink-0 items-center gap-3 text-lg font-extrabold text-ink-900"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
-            <FiGrid size={16} />
-          </span>
+          
           <span className="hidden min-[400px]:inline">{appName}</span>
         </Link>
 
