@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { FiShoppingCart } from "react-icons/fi";
+import { useCart } from "@/context/CartContext";
+import { formatCurrency } from "@/lib/format";
 
 const CATEGORY_STYLES = {
   Ebook:    { pill: "bg-blue-50 text-blue-700",   dot: "bg-blue-500" },
@@ -13,19 +17,31 @@ const CATEGORY_STYLES = {
 const DEFAULT_STYLE = { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" };
 
 export default function ProductCard({ product }) {
-  const { _id, title, price, originalPrice, category, coverImage, rating, salesCount } = product;
+  const { _id, title, price, originalPrice, category, image, rating, salesCount } = product;
   const style = CATEGORY_STYLES[category] ?? DEFAULT_STYLE;
+  const cart = useCart();
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof cart?.addToCart !== "function") {
+      toast.error("Cart is unavailable right now.");
+      return;
+    }
+    cart.addToCart(product, 1);
+    toast.success("Added to cart.");
+  };
 
   return (
     <Link
-      href={`/products/${_id}`}
+      href={`/product/${_id}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-sm"
     >
       {/* thumbnail */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
-        {coverImage ? (
+        {image ? (
           <Image
-            src={coverImage}
+            src={image}
             alt={title}
             fill
             className="object-cover transition duration-300 group-hover:scale-105"
@@ -69,22 +85,20 @@ export default function ProductCard({ product }) {
           <div className="flex items-baseline gap-1.5">
             {originalPrice && (
               <span className="text-[11px] text-gray-400 line-through">
-                ₦{originalPrice.toLocaleString()}
+                {formatCurrency(originalPrice)}
               </span>
             )}
             <span className="text-sm font-bold text-gray-900">
-              ₦{price.toLocaleString()}
+              {formatCurrency(price)}
             </span>
           </div>
 
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              /* hook up your buy / add-to-cart handler here */
-            }}
-            className="rounded-lg bg-gray-900 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-blue-600"
+            type="button"
+            onClick={handleAddToCart}
+            className="flex items-center gap-1 rounded-lg bg-gray-900 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-blue-600"
           >
-            Buy now
+            <FiShoppingCart size={12} /> Add to cart
           </button>
         </div>
       </div>

@@ -14,15 +14,13 @@ import {
   FiGift,
   FiLock,
   FiChevronDown,
+  FiArrowRight,
 } from "react-icons/fi";
 
 export const dynamic = "force-dynamic";
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Express Marketplace";
 const SUPPORT_EMAIL = "support@expresslogs.org";
-
-// Put your hero photo at: public/hero-bg.jpg
-const HERO_IMAGE = "/hero-bg.jpg";
 
 const STATS = [
   { num: "2K+", label: "Available account resources" },
@@ -103,28 +101,35 @@ export default async function HomePage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-[#0a0a0a] text-white">
-        {/* Background image + dark overlay so text stays readable */}
+      {/* ── Hero: clean, light, no background image ── */}
+      <section className="relative overflow-hidden border-b border-gray-100 bg-white">
+        {/* faint dot-grid texture, purely decorative */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
+          className="pointer-events-none absolute inset-0 opacity-[0.4]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/90" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,#2563eb30,transparent)]" />
+        {/* soft color glow, top center */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-blue-100/50 blur-3xl"
+          aria-hidden="true"
+        />
 
-        <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-28">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-medium text-slate-200 backdrop-blur">
+        <div className="relative mx-auto max-w-4xl px-6 py-20 text-center sm:py-28">
+          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-1.5 text-xs font-medium text-gray-600">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
             Fast order processing
           </span>
 
-          <h1 className="mx-auto max-w-2xl text-4xl font-bold leading-[1.15] tracking-tight text-white sm:text-5xl">
+          <h1 className="mx-auto max-w-2xl text-4xl font-bold leading-[1.15] tracking-tight text-gray-900 sm:text-5xl">
             {APP_NAME}
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-gray-500">
             We sell various types of accounts on our panel such as social media
             accounts and pages, logins of premium accounts of all sorts and more.
           </p>
@@ -132,23 +137,23 @@ export default async function HomePage({ searchParams }) {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/register"
-              className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
+              className="inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-600"
             >
-              Create free account
+              Create free account <FiArrowRight size={15} />
             </Link>
             <a
               href="#products"
-              className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-slate-100 backdrop-blur transition hover:border-white/40 hover:text-white"
+              className="rounded-xl border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
             >
               Browse products
             </a>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-10 border-t border-white/10 pt-10">
+          <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 border-t border-gray-100 pt-10">
             {STATS.map(({ num, label }) => (
               <div key={label} className="text-center">
-                <p className="text-2xl font-bold text-white">{num}</p>
-                <p className="mt-1 text-xs text-slate-400">{label}</p>
+                <p className="text-2xl font-bold text-gray-900">{num}</p>
+                <p className="mt-1 text-xs text-gray-500">{label}</p>
               </div>
             ))}
           </div>
