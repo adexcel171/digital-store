@@ -56,7 +56,7 @@ export async function POST(req) {
     method: "paystack",
   });
 
-  const appUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXTAUTH_URL || "https://digital-store-brown-seven.vercel.app";
 
   try {
     const paystackRes = await fetch(

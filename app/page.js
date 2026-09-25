@@ -20,10 +20,10 @@ import {
 export const dynamic = "force-dynamic";
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Express Marketplace";
-const SUPPORT_EMAIL = "support@expresslogs.org";
+const SUPPORT_EMAIL = "support@digitalmart.com";
 
 const STATS = [
-  { num: "2K+", label: "Available account resources" },
+  { num: "1K+", label: "Available account resources" },
   { num: "Fast", label: "Order processing" },
   { num: "24/7", label: "Customer support" },
 ];
@@ -48,7 +48,7 @@ const STORIES = [];
 
 const FAQS = [
   {
-    q: "Why do people use Express Marketplace?",
+    q: "Why do people use DigitalMart Marketplace?",
     a: "Buyers use it as one organized place to browse social media accounts, pages, premium account logins and other account resources, with clear ordering, order tracking and support.",
   },
   {
