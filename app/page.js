@@ -1,7 +1,3 @@
-import { connectDB } from "@/lib/mongodb";
-import Product from "@/models/Product";
-import Category from "@/models/Category";
-import ShopSection from "@/components/ShopSection";
 import Link from "next/link";
 import {
   FiZap,
@@ -16,8 +12,6 @@ import {
   FiChevronDown,
   FiArrowRight,
 } from "react-icons/fi";
-
-export const dynamic = "force-dynamic";
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Express Marketplace";
 const SUPPORT_EMAIL = "support@digitalmart.com";
@@ -53,7 +47,7 @@ const FAQS = [
   },
   {
     q: "What accounts do you sell here?",
-    a: "We sell social media accounts and pages, logins of premium accounts of all sorts, and other account resources. Browse the products section above to see what is currently available.",
+    a: "We sell social media accounts and pages, logins of premium accounts of all sorts, and other account resources. Open the Marketplace page to see what is currently available.",
   },
   {
     q: "How do I place an order?",
@@ -65,40 +59,7 @@ const FAQS = [
   },
 ];
 
-const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-async function getProducts({ search, category }) {
-  await connectDB();
-
-  const filter = { isActive: true };
-  if (search) {
-    // Case-insensitive "contains" match. The admin form saves `title`,
-    // so search both `title` and `name` to be safe.
-    const rx = { $regex: escapeRegex(search), $options: "i" };
-    filter.$or = [{ title: rx }, { name: rx }];
-  }
-  if (category && category !== "all") {
-    filter.category = category;
-  }
-
-  const [products, categories] = await Promise.all([
-    Product.find(filter).sort({ createdAt: -1 }).lean(),
-    Category.find({}).sort({ name: 1 }).lean(),
-  ]);
-  return {
-    products: JSON.parse(JSON.stringify(products)),
-    categories: JSON.parse(JSON.stringify(categories)).map((c) => c.name),
-  };
-}
-
-export default async function HomePage({ searchParams }) {
-  // `await` is required on Next 15 (searchParams is a Promise) and harmless on Next 14
-  const params = await searchParams;
-  const search = (params?.search || "").toString().trim();
-  const category = (params?.category || "").toString();
-
-  const { products, categories } = await getProducts({ search, category });
-
+export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ── Hero: clean, light, no background image ── */}
@@ -141,12 +102,12 @@ export default async function HomePage({ searchParams }) {
             >
               Create free account <FiArrowRight size={15} />
             </Link>
-            <a
-              href="#products"
+            <Link
+              href="/marketplace"
               className="rounded-xl border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
             >
-              Browse products
-            </a>
+              Browse marketplace
+            </Link>
           </div>
 
           <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 border-t border-gray-100 pt-10">
@@ -175,8 +136,24 @@ export default async function HomePage({ searchParams }) {
         </div>
       </div>
 
-      {/* ── Products (client component handles filter + search) ── */}
-      <ShopSection products={products} categories={categories} />
+      {/* ── Marketplace link ── */}
+      <section className="py-14">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-6 text-center">
+          <h2 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
+            Ready to see what&apos;s available?
+          </h2>
+          <p className="max-w-xl text-gray-500">
+            Browse every account and resource in one place, search by name, and
+            filter by category.
+          </p>
+          <Link
+            href="/marketplace"
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            Go to marketplace <FiArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
 
       {/* ── Why choose us ── */}
       <section className="bg-white py-16">
