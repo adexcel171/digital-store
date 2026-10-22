@@ -29,7 +29,7 @@ export default function ShopSection({ products, categories }) {
     <section id="products" className="mx-auto max-w-6xl px-5 py-10">
 
       {/* ── Filter bar ── */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-3">
         {/* category pills */}
         <div className="flex flex-wrap gap-2">
           <button
@@ -57,8 +57,8 @@ export default function ShopSection({ products, categories }) {
           ))}
         </div>
 
-        {/* search */}
-        <div className="relative ml-auto">
+        {/* search: full width on mobile, fixed width pushed right on larger screens */}
+        <div className="relative w-full sm:ml-auto sm:w-48">
           <FiSearch
             size={14}
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -68,7 +68,7 @@ export default function ShopSection({ products, categories }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search products…"
-            className="w-48 rounded-full border border-gray-200 bg-white py-1.5 pl-8 pr-4 text-sm text-gray-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-full border border-gray-200 bg-white py-1.5 pl-8 pr-4 text-sm text-gray-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
           />
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function ShopSection({ products, categories }) {
           <p className="mb-4 mt-8 text-xs font-semibold uppercase tracking-widest text-gray-400">
             {activeCategory === "all" ? "All products" : activeCategory} &mdash; {filtered.length} result{filtered.length !== 1 ? "s" : ""}
           </p>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filtered.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
