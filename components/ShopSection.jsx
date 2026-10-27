@@ -86,7 +86,9 @@ export default function ShopSection({ products, categories }) {
           <p className="mb-4 mt-8 text-xs font-semibold uppercase tracking-widest text-gray-400">
             {activeCategory === "all" ? "All products" : activeCategory} &mdash; {filtered.length} result{filtered.length !== 1 ? "s" : ""}
           </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+          {/* 1 column on mobile (<768px), 3 on md, 4 on lg */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {filtered.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
